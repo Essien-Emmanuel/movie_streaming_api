@@ -4,7 +4,6 @@ import  { TestService } from '../services/test';
 
 const { test} = TestService;
 
-
 class TestController {
     static testFn() {
         return defineController({
