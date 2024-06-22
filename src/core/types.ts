@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 export type TData = {
     statusCode?: number, 
     message: string,
-    data: object
+    data: Record<string, any>
 }
 
 export interface ControllerRequest extends Request {

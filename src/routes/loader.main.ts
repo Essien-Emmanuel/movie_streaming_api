@@ -3,11 +3,11 @@ import { Router, Request, Response, NextFunction, RequestHandler } from 'express
 import { MetadataKeys, IRouter } from '../core/decorators/types';
 
 class RouteLoader {
-    public router: Router;
-    public routeConfig: IRouter[];
-    public targetConstructor: any;
-    public targetController: any;
-    public basePath: string;
+    protected router: Router;
+    protected routeConfig: IRouter[];
+    protected targetConstructor: any;
+    protected targetController: any;
+    protected basePath: string;
 
     constructor(targetController: any) {
         this.router = Router();
