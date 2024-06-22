@@ -1,24 +1,39 @@
 import dotenv from 'dotenv';
+import {DatabaseType, TAppEnv  } from './types';
 
 dotenv.config();
 
-export const AppEnv = {
-    DEV: 'development',
-    TEST: "test",
-    PROD: "production"
-} as const;
 
 interface IConfig {
     app: {
         port: number,
-        env: string //(typeof AppEnv)[keyof typeof AppEnv ]
+        env: TAppEnv
+    },
+    database: {
+        localConfig: {
+            type: DatabaseType,
+            host: string,
+            port: number,
+            username: string,
+            password: string,
+            database: string
+        }
     }
 }
 
 export const Config: IConfig = {
     app: {
         port: +process.env.PORT!,
-        env: process.env.APP_ENV?.trim()!
-
+        env: process.env.APP_ENV?.trim()! as TAppEnv
+    },
+    database: {
+        localConfig: {
+            type: process.env.LOCAL_DB_TYPE! as DatabaseType,
+            host: process.env.LOCAL_DB_HOST!,
+            port: +process.env.LOCAL_DB_PORT!,
+            username: process.env.LOCAL_DB_USERNAME!,
+            password: process.env.LOCAL_DB_PASSWORD!,
+            database: process.env.LOCAL_DB_NAME!
+        }
     }
 }
