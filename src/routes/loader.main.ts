@@ -35,7 +35,19 @@ class RouteLoader {
                 case 'post':
                     this.router.post(fullPath, handler);
                     break       
-            default:
+                case 'put':
+                    this.router.put(fullPath, handler);
+                    break       
+                case 'patch':
+                    this.router.patch(fullPath, handler);
+                    break       
+                case 'delete':
+                    this.router.delete(fullPath, handler);
+                    break       
+                case 'options':
+                    this.router.options(fullPath, handler);
+                    break       
+                default:
                 throw new Error(`Unsupported HTTP method: ${httpMethod}`);;
            }
 

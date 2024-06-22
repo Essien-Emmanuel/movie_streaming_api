@@ -1,6 +1,5 @@
-import { RouteLoader } from './loader';
+import { RouteLoader } from './loader.main';
 import { TestController } from '../controllers/test';
 
 const loadTestRouter = new RouteLoader(TestController).load()
-// const router = loadRoute.load();
 export { loadTestRouter }

@@ -1,8 +1,8 @@
 import express from 'express';
-import { router as testRoutes }  from './test';
+import { loadTestRouter as testRunRoutes} from './testrun'
 
 const router = express();
 
-router.use(testRoutes);
+router.use(testRunRoutes);
 
 export { router }

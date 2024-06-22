@@ -1,9 +1,9 @@
 import { defineController } from '../core/defineController';
 import { ControllerRequest } from '../core/types';
 import  { TestService } from '../services/test';
-import { Controller, Get, Post } from '../core/decorators/index';
+import { Controller, Get, Post, Put } from '../core/decorators/index';
 
-const { test, testTwo} = TestService;
+const { test, testTwo, testThree } = TestService;
 
 @Controller('/test')
 class TestController {
@@ -21,6 +21,16 @@ class TestController {
         return defineController({
             async controller(req: ControllerRequest) {
                 const response = testTwo();
+                req.return?.(response);
+            }
+        })
+    }
+
+    @Put('/three')
+    static testFnThree() {
+        return defineController({
+            async controller(req: ControllerRequest) {
+                const response = testThree();
                 req.return?.(response);
             }
         })
