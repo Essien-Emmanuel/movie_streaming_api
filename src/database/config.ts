@@ -1,12 +1,15 @@
-import { DataSource } from "typeorm"
+import { DataSource  } from "typeorm";
+import { Config } from '../config';
+
+const { type, host, port, username, password, database, } = Config.database.localConfig;
 
 export const myDataSource = new DataSource({
-    type: "mysql",
-    host: "localhost",
-    port: 3306,
-    username: "root",
-    password: "@mySQL_300",
-    database: "testdb",
+    type,
+    host,
+    port,
+    username,
+    password,
+    database,
     entities: ["src/database/entity/*.ts"],
     logging: true,
     synchronize: true,
