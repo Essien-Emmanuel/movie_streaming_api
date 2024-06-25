@@ -7,7 +7,7 @@ const { test, testTwo, testThree } = TestService;
 
 @Controller('/test')
 class TestController {
-    @Get('/')
+    @Get()
     static testFn() {
         return defineController({
             async controller(req: ControllerRequest) {
@@ -16,7 +16,7 @@ class TestController {
             }
         })
     }
-    @Post('/two')
+    @Post()
     static testFnTwo() {
         return defineController({
             async controller(req: ControllerRequest) {
@@ -26,7 +26,7 @@ class TestController {
         })
     }
 
-    @Put('/three')
+    @Put()
     static testFnThree() {
         return defineController({
             async controller(req: ControllerRequest) {

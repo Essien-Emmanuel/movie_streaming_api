@@ -15,6 +15,7 @@ class RouteLoader {
         this.basePath = Reflect.getMetadata(MetadataKeys.BASE_PATH, targetController) || ''
         this.targetConstructor = targetController.constructor;
         this.routeConfig = Reflect.getMetadata(MetadataKeys.ROUTERS, this.targetConstructor) || [];
+        // console.log(this.routeConfig)
     }
 
     load(): Router {
@@ -23,8 +24,10 @@ class RouteLoader {
             const { handlerName, httpMethod, path} = config;
             const fullPath = `${this.basePath}${path || ""}`
 
+            const controllerHandlerFn = this.targetController[handlerName];
+            if (!controllerHandlerFn) continue;
+
             const handler: RequestHandler =   (req: Request, res: Response, next: NextFunction) => {
-                const controllerHandlerFn = this.targetController[handlerName]
                 const routeHandlerFn = controllerHandlerFn();
                 routeHandlerFn(req, res, next)
             }

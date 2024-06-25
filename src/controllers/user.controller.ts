@@ -7,7 +7,7 @@ const { createUser, getAllUsers } = UserService;
 
 @Controller('/users')
 export class UserController {
-    @Get('/all')
+    @Get()
     static getAllUsers() {
         return defineController({
             async controller(req: ControllerRequest) {
@@ -18,7 +18,7 @@ export class UserController {
     }
 
 
-    @Post('/create')
+    @Post()
     static createUser() {
         return defineController({
             async controller(req: ControllerRequest){

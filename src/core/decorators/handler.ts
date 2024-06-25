@@ -3,7 +3,7 @@ import { THttpMethods, MetadataKeys, IRouter } from './types';
 
 
 export function MethodFactory(httpMethod: THttpMethods) {
-    return function(path: string): MethodDecorator {
+    return function( path: string  = ""): MethodDecorator {
         return function(target: any, propertyName: string | symbol, descriptor: PropertyDescriptor) {
             const originalConstructor = target.constructor;
 

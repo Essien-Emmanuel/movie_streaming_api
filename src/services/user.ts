@@ -9,22 +9,15 @@ export class UserService {
         console.log('new user ', newUser);
 
         return {
-            message: '',
+            statusCode: 201,
+            message: 'Created a user successfully.',
             data: { newUser }
         }
     }
 
     static async getAllUsers(): Promise<HandlerData> {
-        const users = [
-            {
-                id: 1,
-                email: 'user1@gmail.com',
-            },
-            {
-                id: 2,
-                email: 'user2@gmail.com'
-            }
-        ];
+        const users = await UserRepo.getAll();
+        
         return {
             message: 'Fetched all users',
             data: { users }

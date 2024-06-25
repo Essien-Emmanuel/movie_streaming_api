@@ -11,6 +11,6 @@ export const appDataSource = new DataSource({
     password,
     database,
     entities: ["src/database/entities/*.ts"],
-    logging: true,
+    logging: ["schema", "error", "warn", "info", "log"],
     synchronize: true,
 });     
