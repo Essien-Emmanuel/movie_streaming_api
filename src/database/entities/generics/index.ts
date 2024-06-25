@@ -10,6 +10,6 @@ export abstract class Generic {
     @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP(6)', onUpdate: 'CURRENT_TIMESTAMP(6)' })
     updated_at!: Date;
 
-    @Column()
+    @Column({ type: 'timestamp',nullable: true })
     deleted_at!: Date;
 }

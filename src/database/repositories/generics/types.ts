@@ -5,7 +5,7 @@ export interface IRepository<T extends Generic >  {
     getById(id: number): Promise<T | null>;
     getAll(): Promise<T[]>;
     getSomeByFilter(filterQuery: Partial<T>): Promise<T[]>;
-    create(data: DeepPartial<T>): Promise<T>;
+    create(data: DeepPartial<T>): Promise<T | null>;
     update(id: number, data: DeepPartial<T>): Promise <T | null>;
     delete(id: number): Promise<DeleteResult>;
 }

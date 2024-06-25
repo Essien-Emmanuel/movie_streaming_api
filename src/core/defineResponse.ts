@@ -1,6 +1,6 @@
-import { TData } from './types';
+import { HandlerData } from './types';
 
-export const defineResponse = (data: TData) => {
+export const defineResponse = (data: HandlerData) => {
     return {
         status: 'success',
         message: data.message ?? 'success',

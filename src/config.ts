@@ -28,7 +28,7 @@ export const Config: IConfig = {
     },
     database: {
         localConfig: {
-            type: process.env.LOCAL_DB_TYPE! as DatabaseType,
+            type: process.env.DB_TYPE! as DatabaseType,
             host: process.env.LOCAL_DB_HOST!,
             port: +process.env.LOCAL_DB_PORT!,
             username: process.env.LOCAL_DB_USERNAME!,

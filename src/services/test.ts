@@ -1,19 +1,19 @@
-import { TData } from '../core/types';
+import { HandlerData } from '../core/types';
 
 class TestService {
-    static test(): TData {
+    static test(): HandlerData {
         return {
             message: 'testing successful',
             data: { test: 'testing the app is a success #2'}
         }
     }
-    static testTwo(): TData {
+    static testTwo(): HandlerData {
         return {
             message: 'second testing successful',
             data: { test: 'testing the app is a success foe second #2'}
         }
     }
-    static testThree(): TData {
+    static testThree(): HandlerData {
         return {
             message: 'Third testing successful',
             data: { test: 'testing the app is a success for third #3'}

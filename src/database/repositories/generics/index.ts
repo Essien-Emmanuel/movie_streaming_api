@@ -1,9 +1,9 @@
-import { DeepPartial, DeleteResult, FindOptionsWhere, ObjectLiteral, Repository, } from 'typeorm';
+import { DeepPartial, DeleteResult, FindOptionsWhere, ObjectLiteral, Repository,} from 'typeorm';
 import { Generic } from '../../entities/generics';
 import { IRepository } from './types';
 
 export abstract class GenericRepo<T extends Generic & ObjectLiteral > implements IRepository<T> {
-    constructor( private readonly repository: Repository<T>) {}
+    constructor( protected readonly repository: Repository<T>) {}
 
     getById(id: number): Promise<T | null> {
         return this.repository.findOneBy({ id } as FindOptionsWhere<T>);
