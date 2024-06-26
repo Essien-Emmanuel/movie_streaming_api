@@ -1,9 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
+import { TTokenFlag } from '../types';
 
 export type HandlerData = {
     statusCode?: number, 
     message: string,
-    data: Record<string, any>
+    data: {
+        [key: string]: any;
+        token?: {
+            flag: TTokenFlag;
+            value: string;
+        }
+    };
 }
 
 export interface ControllerRequest extends Request {

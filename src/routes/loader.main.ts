@@ -1,28 +1,28 @@
 import 'reflect-metadata';
 import { Router, Request, Response, NextFunction, RequestHandler } from 'express';
-import { MetadataKeys, IRouter } from '../core/decorators/types';
+import { MetadataKeys, ControllerOptions, IRouter } from '../core/decorators/types';
 
 class RouteLoader {
     protected router: Router;
     protected routeConfig: IRouter[];
     protected targetConstructor: any;
     protected targetController: any;
-    protected basePath: string;
+    protected controllerConfig: ControllerOptions;
 
     constructor(targetController: any) {
         this.router = Router();
         this.targetController = targetController;
-        this.basePath = Reflect.getMetadata(MetadataKeys.BASE_PATH, targetController) || ''
+        this.controllerConfig = Reflect.getMetadata(MetadataKeys.CONTROLLER_CONFIG, targetController) || ''
         this.targetConstructor = targetController.constructor;
         this.routeConfig = Reflect.getMetadata(MetadataKeys.ROUTERS, this.targetConstructor) || [];
-        // console.log(this.routeConfig)
     }
 
     load(): Router {
         for (const config of this.routeConfig) {
+            const { basePath, use = [] } = this.controllerConfig;
 
             const { handlerName, httpMethod, path} = config;
-            const fullPath = `${this.basePath}${path || ""}`
+            const fullPath = `${basePath}${path || ""}`
 
             const controllerHandlerFn = this.targetController[handlerName];
             if (!controllerHandlerFn) continue;
@@ -33,25 +33,25 @@ class RouteLoader {
             }
             switch (httpMethod) {
                 case 'get':
-                    this.router.get(fullPath, handler);
+                    this.router.get(fullPath, ...use, handler);
                     break       
                 case 'post':
-                    this.router.post(fullPath, handler);
+                    this.router.post(fullPath, ...use, handler);
                     break       
                 case 'put':
-                    this.router.put(fullPath, handler);
+                    this.router.put(fullPath, ...use, handler);
                     break       
                 case 'patch':
-                    this.router.patch(fullPath, handler);
+                    this.router.patch(fullPath, ...use, handler);
                     break       
                 case 'delete':
-                    this.router.delete(fullPath, handler);
+                    this.router.delete(fullPath, ...use, handler);
                     break       
                 case 'options':
-                    this.router.options(fullPath, handler);
+                    this.router.options(fullPath, ...use, handler);
                     break       
                 default:
-                throw new Error(`Unsupported HTTP method: ${httpMethod}`);;
+                    throw new Error(`Unsupported HTTP method: ${httpMethod}`);;
            }
 
         }

@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 
 
 type JWTPayload = {
-    user: Record<string, any>;
+    user: { id: number; email: string; };
     flag: any;
     timestamp: Date;
 }
@@ -16,10 +16,10 @@ export const generateToken = (payload: JWTPayload, expiresIn: string = '1000h') 
     });
 }
 
-export const verifyToken = (token: string) => {
+export const verifyToken = (token: string): Promise<JWTPayload> => {
     return new Promise((resolve, reject) => {
-        jwt.verify(token, 'secretkey', (error, decodedToken) => {
-            if (error) return reject(error);
+        jwt.verify(token, 'secretkey', (error, decodedToken: JWTPayload | any) => {
+            if (error) reject(error);
             return resolve(decodedToken);
         });
     });
