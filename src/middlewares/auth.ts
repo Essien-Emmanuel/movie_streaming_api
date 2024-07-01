@@ -1,11 +1,11 @@
 import { Response, NextFunction} from 'express';
-import { AuthenticationError, NotFoundError } from '../libs/exceptions';
+import { AuthenticationError, AuthorizationError, NotFoundError } from '../libs/exceptions';
 import { verifyToken } from '../utils';
 import { UserRepo } from '../database/repositories/user.repo';
-import { TTokenFlag, SessionRequest } from '../types';
+import { TTokenFlag, SessionRequest, Role, TRole } from '../types';
 
 export class AuthMiddleware {
-    static authentication(tokenFlag: TTokenFlag) {
+    static authenticate(tokenFlag: TTokenFlag) {
         return async (req: SessionRequest, _res: Response, next: NextFunction) => {
             const authorization = req.headers.authorization || "";
             const [, token] = authorization?.split(" ");
@@ -24,7 +24,8 @@ export class AuthMiddleware {
     
                 req.session = {
                     token,
-                    user
+                    user,
+                    role: Role.USER
                 }
                 
                 return next();
@@ -38,6 +39,13 @@ export class AuthMiddleware {
                         return next(error);
                 }
             }
+        }
+    }
+
+    static Authorize(roles: TRole[]) {
+        return (req: SessionRequest, res: Response, next: NextFunction) => {
+            if (!roles.includes(req.session.role)) return next(new AuthorizationError('Not authorized to access this endpoint.'));
+            return next();
         }
     }
 }

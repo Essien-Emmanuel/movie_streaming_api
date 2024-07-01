@@ -24,7 +24,7 @@ export interface SessionRequest extends Request {
     session: {
         token: string;
         user: DeepPartial<User>;
-        role?: string;
+        role: TRole;
         [key: string]: any;
     }
 }

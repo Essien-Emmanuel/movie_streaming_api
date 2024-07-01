@@ -1,11 +1,9 @@
 import 'reflect-metadata';
-import {  MetadataKeys, ControllerOptions, Middleware } from './types';
+import {  MetadataKeys, TControllerOptions, TMiddleware } from './types';
 
-export function Controller(options: ControllerOptions) {
-    return function(target: Function, ) {
-        // Reflect.defineMetadata(MetadataKeys.BASE_PATH, options.basePath, target);
-        
-        const middlewares: Middleware[] = []; 
+export function Controller(options: TControllerOptions) {
+    return function(target: Function, ) {        
+        const middlewares: TMiddleware[] = []; 
 
         if (options.use && options.use.length > 0) {
             for (const middleware of options.use) {

@@ -24,9 +24,9 @@ export interface IRouter {
     handlerName: string | symbol ;
 };
 
-export type Middleware = (req: any, res: any, next: any) => void;
+export type TMiddleware = (req: any, res: any, next: any) => void;
 
-export type ControllerOptions = {
+export type TControllerOptions = {
     basePath: string;
-    use?: Middleware[]
+    use?: TMiddleware[] 
 }
