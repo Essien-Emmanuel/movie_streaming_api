@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import { Config  } from '../config';
 import { APIError } from '../core/APIError';
 
@@ -26,7 +27,7 @@ class GeneralMiddleware {
             timestamp: Date.now(),
             message: "Something went wrong. Please contact our support team.",
             ...(!['test', 'production'].includes(env) ? { stack: error.stack} : {})
-        })
+        });
     }
 
     static NotFoundHandler(req: Request, res: Response) {
@@ -36,8 +37,10 @@ class GeneralMiddleware {
             code: 404,
             timestamp: Date.now(),
             message: `${req.url} endpoint not found.`
-        })
+        });
     }
+
+    static CORS = cors();
 
     static DevLog(req: Request, _res: Response, next: NextFunction) {
         console.log(`- Request:: ${req.method} ${req.url}`);

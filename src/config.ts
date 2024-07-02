@@ -6,17 +6,19 @@ dotenv.config();
 
 interface IConfig {
     app: {
-        port: number,
-        env: TAppEnv
+        port: number;
+        env: TAppEnv;
+        saltRounds: number;
+        secret: string;
     },
     database: {
         localConfig: {
-            type: DatabaseType,
-            host: string,
-            port: number,
-            username: string,
-            password: string,
-            database: string
+            type: DatabaseType;
+            host: string;
+            port: number;
+            username: string;
+            password: string;
+            database: string;
         }
     }
 }
@@ -24,7 +26,9 @@ interface IConfig {
 export const Config: IConfig = {
     app: {
         port: +process.env.PORT!,
-        env: process.env.APP_ENV?.trim()! as TAppEnv
+        env: process.env.APP_ENV?.trim()! as TAppEnv,
+        saltRounds: +process.env.SALT_ROUNDS!,
+        secret: process.env.API_SECRET!
     },
     database: {
         localConfig: {
