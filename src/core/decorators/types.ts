@@ -1,9 +1,11 @@
 export const MetadataKeys = {
-    BASE_PATH: 'base_path',
-    ROUTERS: 'routers'
+    BASE_PATH: 'base-path',
+    ROUTERS: 'routers',
+    MIDDLEWARE: 'middleware',
+    CONTROLLER_CONFIG: 'contoller-config'
 } as const;
 
-export type TMetadataKeys = typeof MetadataKeys;
+export type TMetadataKeys = (typeof MetadataKeys)[keyof typeof MetadataKeys];
 
 export const HttpMethods = {
     GET: 'get',
@@ -20,4 +22,11 @@ export interface IRouter {
     httpMethod: THttpMethods;
     path: string;
     handlerName: string | symbol ;
+};
+
+export type TMiddleware = (req: any, res: any, next: any) => void;
+
+export type TControllerOptions = {
+    basePath: string;
+    use?: TMiddleware[] 
 }

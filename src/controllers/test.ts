@@ -5,7 +5,7 @@ import { Controller, Get, Post, Put } from '../core/decorators/index';
 
 const { test, testTwo, testThree } = TestService;
 
-@Controller('/test')
+@Controller({ basePath: '/test'})
 class TestController {
     @Get()
     static testFn() {

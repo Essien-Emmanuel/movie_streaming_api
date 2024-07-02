@@ -1,62 +1,56 @@
-import 'reflect-metadata';
-import { Router, Request, Response, NextFunction, RequestHandler } from 'express';
-import { MetadataKeys, IRouter } from '../core/decorators/types';
+import "reflect-metadata";
+import { Router, Request, Response, NextFunction, RequestHandler } from "express";
+import { MetadataKeys, TControllerOptions, IRouter } from '../core/decorators/types';
 
-class RouteLoader {
-    protected router: Router;
+
+export class RouteLoader {
+	protected router: Router;
     protected routeConfig: IRouter[];
-    protected targetConstructor: any;
     protected targetController: any;
-    protected basePath: string;
+    protected controllerConfig: TControllerOptions;
 
     constructor(targetController: any) {
         this.router = Router();
-        this.targetController = targetController;
-        this.basePath = Reflect.getMetadata(MetadataKeys.BASE_PATH, targetController) || ''
-        this.targetConstructor = targetController.constructor;
-        this.routeConfig = Reflect.getMetadata(MetadataKeys.ROUTERS, this.targetConstructor) || [];
-        // console.log(this.routeConfig)
+        this.targetController = new targetController();
+        this.controllerConfig = Reflect.getMetadata(MetadataKeys.CONTROLLER_CONFIG, targetController) || ''
+        this.routeConfig = Reflect.getMetadata(MetadataKeys.ROUTERS, this.targetController) || [];
     }
 
-    load(): Router {
-        for (const config of this.routeConfig) {
+	load() {
+		for (const config of this.routeConfig) {
+			const { basePath, use = [] } = this.controllerConfig;
 
-            const { handlerName, httpMethod, path} = config;
-            const fullPath = `${this.basePath}${path || ""}`
+			const { httpMethod , path, handlerName } = config;
+			const fullPath = `${basePath}${path || ""}`;
 
-            const controllerHandlerFn = this.targetController[handlerName];
-            if (!controllerHandlerFn) continue;
-
-            const handler: RequestHandler =   (req: Request, res: Response, next: NextFunction) => {
-                const routeHandlerFn = controllerHandlerFn();
-                routeHandlerFn(req, res, next)
-            }
-            switch (httpMethod) {
-                case 'get':
-                    this.router.get(fullPath, handler);
-                    break       
-                case 'post':
-                    this.router.post(fullPath, handler);
-                    break       
-                case 'put':
-                    this.router.put(fullPath, handler);
-                    break       
-                case 'patch':
-                    this.router.patch(fullPath, handler);
-                    break       
-                case 'delete':
-                    this.router.delete(fullPath, handler);
-                    break       
-                case 'options':
-                    this.router.options(fullPath, handler);
-                    break       
-                default:
-                throw new Error(`Unsupported HTTP method: ${httpMethod}`);;
-           }
-
-        }
-       return this.router
-
-    }
+			const handler: RequestHandler = (req: Request, res: Response, next: NextFunction) => {
+				return this.targetController[handlerName](req, res, next);
+			}
+	
+			switch (httpMethod ) {
+				case "get":
+					this.router.get(fullPath, ...use, handler);
+					break;
+	
+				case "post":
+					this.router.post(fullPath,  ...use, handler);
+					break;
+	
+				case "put":
+					this.router.put(fullPath,  ...use, handler);
+					break;
+	
+				case "patch":
+					this.router.patch(fullPath,  ...use, handler);
+					break;
+	
+				case "delete":
+					this.router.delete(fullPath,  ...use, handler);
+					break;
+			}
+		}
+		return this.router;
+	}
 }
-export { RouteLoader }
+
+export const loadRouter = (controller: any ) => new RouteLoader(controller).load()
