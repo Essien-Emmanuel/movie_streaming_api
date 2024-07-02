@@ -5,7 +5,7 @@ import { generateToken, hashString } from '@/src/utils';
 import { Role, TokenFlag } from '@/src/types';
 import { OTP } from '@/src/utils/otp';
 import { OTPStatus } from '@/src/database/enums';
-// import { Mail } from '@/src/libs/mailer';
+import { Mail } from '@/src/libs/mailer';
 
 const initiateSignup = async (signupDto: TUserSignupSchema) => {
     const { email, password }  = signupDto;
@@ -16,30 +16,22 @@ const initiateSignup = async (signupDto: TUserSignupSchema) => {
     const generatedOtp = await OTP.generate();
 
     const hashedPassword = await hashString(password);
-    const hashedOtp = await hashString(generatedOtp);
+    // const hashedOtp = await hashString(generatedOtp);
 
     const otpExpDate = await OTP.generateExpiryDate()
 
-    // const mailResponse = await Mail?.send({
-    //     to: email,
-    //     subject: "Flickstream📺",
-    //     textPart: `Your Flickstream otp is ${generatedOtp}`
-    // });
-    // if (!mailResponse?.success) throw new InternalServerError('Unable to send otp. Check email.');
-    return { message: 'success', data:{
-        email,
-        password: hashedPassword,
-        role: Role.USER,
-        otp: hashedOtp,
-        otp_status: OTPStatus.PENDING,
-        otp_expiration: otpExpDate
-    }}
+    const mailResponse = await Mail?.send({
+        to: email,
+        subject: "Flickstream 🚀",
+        textPart: `Your Flickstream otp is ${generatedOtp}`
+    });
+    if (!mailResponse?.success) throw new InternalServerError('Unable to send otp. Check email.');
         
     const newUser = await UserRepo.create({
         email,
         password: hashedPassword,
         role: Role.USER,
-        otp: hashedOtp,
+        otp: generatedOtp,
         otp_status: OTPStatus.PENDING,
         otp_expiration: otpExpDate
     });
