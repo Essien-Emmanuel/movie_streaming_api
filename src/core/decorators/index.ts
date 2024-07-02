@@ -2,6 +2,7 @@ import { MethodFactory, Middleware } from "./handler";
 import { HttpMethods } from "./types";
 
 export * from './controller';
+export * from './validate'
 
 export const Get = MethodFactory(HttpMethods.GET);
 export const Post = MethodFactory(HttpMethods.POST);

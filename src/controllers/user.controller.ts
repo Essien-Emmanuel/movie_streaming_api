@@ -1,14 +1,13 @@
-import { defineController } from "../core/defineController";
 import { ControllerRequest } from '../core/types';
-import { Controller, Middleware, Post, Get } from '../core/decorators/index';
+import { Controller, Middleware, Validate, Post, Get } from '../core/decorators/index';
 import { UserService } from '../services/user';
 import { AuthMiddleware } from "../middlewares/auth";
 import {  Role, TokenFlag, } from '../types';
 import { NextFunction, Response, } from "express";
 import { defineHandler } from "../core/defineHandler";
+import { UserSignupSchema } from '../validators/schemas/user.schema';
 
-const { createUser } = UserService;
-console.log('log:: ', Middleware([AuthMiddleware.Authorize([ Role.USER ])]), TokenFlag.AUTH)
+console.log('log:: ', Middleware([AuthMiddleware.Authorize([ Role.USER ])]), TokenFlag.AUTH);
 
 @Controller({
     basePath: '/users',
@@ -17,21 +16,19 @@ console.log('log:: ', Middleware([AuthMiddleware.Authorize([ Role.USER ])]), Tok
 export class UserController {
     private userService = UserService;
 
-    // @Middleware([AuthMiddleware.Authorize([ Role.USER ])])
+    @Middleware([AuthMiddleware.Authorize([ Role.USER ])])
     @Get()
     getAllUsers(req: ControllerRequest, res: Response, next: NextFunction) {
-		return defineHandler((req: ControllerRequest) => {
-			return this.userService.getAllUsers();
+        return defineHandler(() => {
+            return this.userService.getAllUsers();
 		})(req, res, next);
 	}
-
+    
+    @Validate(UserSignupSchema)
     @Post()
-    createUser() {
-        return defineController({
-            async controller(req: ControllerRequest){
-                const response = await createUser(req.body);
-                req.return?.(response);
-            }
-        });
+    createUser(req: ControllerRequest, res: Response, next: NextFunction) {
+        return defineHandler((req: ControllerRequest) => {
+			return this.userService.createUser(req.body);
+		})(req, res, next);
     }
 }

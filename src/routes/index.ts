@@ -1,10 +1,11 @@
 import express from 'express';
-import { loadTestRouter as testRunRoutes} from './testrun';
-import { loadUserRouter as UserRoutes} from './user';
+import { loadRouter } from './loader.main';
+import { UserController } from '../controllers/user.controller';
+import { TestController } from '../controllers/test';
 
 const router = express();
 
-router.use(testRunRoutes);
-router.use(UserRoutes);
+router.use(loadRouter(UserController));
+router.use(loadRouter(TestController));
 
-export { router }
+export { router };

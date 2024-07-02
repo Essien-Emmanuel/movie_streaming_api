@@ -52,3 +52,5 @@ export class RouteLoader {
 		return this.router;
 	}
 }
+
+export const loadRouter = (controller: any ) => new RouteLoader(controller).load()

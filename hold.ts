@@ -3,21 +3,18 @@ const SUPPORTED_LANGUAGES = ["en", "es", "it"]
 // this syntax is equals to "en" | "es" | "it"
 export type Language = typeof SUPPORTED_LANGUAGES[number] 
 
-function Logger(target: any, name: string, descriptor: PropertyDescriptor) {
-    const originalMethod = descriptor.value;
-    descriptor.value =  function (...args: any[]) {
-        console.log('this => ', this);
-        console.log('target ', target)
-        console.log('or ', originalMethod)
-        originalMethod.apply(this, args)
-    }
-    return descriptor;
-}
+import { ZodError } from "zod";
 
-class Test {
-    @Logger
-    static greet() {
-        console.log('hello')
-    }
+export function formatZodError(error: ZodError): any[] {
+	return error.errors.map((err) => {
+		const { path, message } = err;
+		const target = path.join(".");
+		const propertyName = path[path.length - 1];
+		return {
+			target,
+			propertyName,
+			constraints: { message },
+			options: {}, // You can populate options based on your requirements
+		};
+	});
 }
-Test.greet()
