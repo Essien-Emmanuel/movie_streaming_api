@@ -4,7 +4,7 @@ import { ControllerRequest, HandlerData } from './types';
 
 export type HandlerFn = ( req: ControllerRequest) => Promise<HandlerData> // | (() => Promise<HandlerData>) ;
 
-function defineHandler(handlerFn: HandlerFn): RequestHandler {     
+function wrapHandler(handlerFn: HandlerFn): RequestHandler {     
     return async (req: ControllerRequest, res: Response, next: NextFunction ) => {
         try {
             const { message, data } = await handlerFn(req);
@@ -16,4 +16,4 @@ function defineHandler(handlerFn: HandlerFn): RequestHandler {
     }
 }
 
-export { defineHandler }
+export { wrapHandler }

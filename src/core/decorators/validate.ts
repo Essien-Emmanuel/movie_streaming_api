@@ -10,6 +10,8 @@ export const Validate = (schema: z.Schema): MethodDecorator => {
             const [ req, res, next] = args;
 
             const errors = validateSchema(schema, req.body);
+            console.log('error ', errors)
+
             if (errors.length > 0) throw new ValidationError('Invalid Input.', errors);
             
             return originalMethod.apply(this, [req, res, next]);

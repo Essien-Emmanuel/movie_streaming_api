@@ -3,7 +3,7 @@ import { TTokenFlag } from '../types';
 
 export type HandlerData = {
     statusCode?: number, 
-    message: string,
+    message?: string,
     data: {
         [key: string]: any;
         token?: {
