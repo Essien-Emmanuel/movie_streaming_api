@@ -3,7 +3,7 @@ import { APIError as GenericError } from '../../core/APIError';
 
 
 export class ServiceError extends GenericError {
-    constructor(message: string) {
+    constructor(message: string = 'Bad Request') {
         super(message, HttpStatusCodes.BAD_REQUEST);
     }
 }
