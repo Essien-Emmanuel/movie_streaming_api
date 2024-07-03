@@ -15,6 +15,7 @@ class GeneralMiddleware {
                 name: error.name,
                 code: error.statusCode,
                 timestamp: Date.now(),
+                ...(!(error as any).errors ? { message: error.message }: { message: error.message, errors: (error as any).errors}),
                 message: error.message,
                 ...(!['test', 'production'].includes(env) ? { stack: error.stack} : {})
             });

@@ -4,7 +4,7 @@ import { UserService } from '../services/user';
 import { AuthMiddleware } from "../middlewares/auth";
 import {  Role, TokenFlag, } from '../types';
 import { NextFunction, Response, } from "express";
-import { defineHandler } from "../core/defineHandler";
+import { wrapHandler } from '../core/wrapHandler';
 import { UserSignupSchema } from '../validators/schemas/user.schema';
 
 console.log('log:: ', Middleware([AuthMiddleware.Authorize([ Role.USER ])]), TokenFlag.AUTH);
@@ -19,7 +19,7 @@ export class UserController {
     @Middleware([AuthMiddleware.Authorize([ Role.USER ])])
     @Get()
     getAllUsers(req: ControllerRequest, res: Response, next: NextFunction) {
-        return defineHandler(() => {
+        return wrapHandler(() => {
             return this.userService.getAllUsers();
 		})(req, res, next);
 	}
@@ -27,7 +27,7 @@ export class UserController {
     @Validate(UserSignupSchema)
     @Post()
     createUser(req: ControllerRequest, res: Response, next: NextFunction) {
-        return defineHandler((req: ControllerRequest) => {
+        return wrapHandler((req: ControllerRequest) => {
 			return this.userService.createUser(req.body);
 		})(req, res, next);
     }

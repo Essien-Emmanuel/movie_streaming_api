@@ -1,5 +1,3 @@
-import { compareStrings } from ".";
-
 export class OTP {
     static async generate(otpLen: number = 6) {
         let otp = '';
@@ -23,7 +21,7 @@ export class OTP {
         const isExpiryDateTime = expiryDateTime > currentDateTime;
         if (!isExpiryDateTime) return { expired: true, msg: 'OTP expired' };
 
-        const isOtp = await compareStrings(inputOtp, storedOtp);
+        const isOtp = inputOtp === storedOtp;
         if (!isOtp) return { expired: false, isOtp: false, msg: 'Invalid OTP' };
 
         return {

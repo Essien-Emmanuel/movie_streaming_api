@@ -20,6 +20,10 @@ interface IConfig {
             password: string;
             database: string;
         }
+    },
+    mail: {
+        key: string;
+        secret: string; 
     }
 }
 
@@ -39,5 +43,9 @@ export const Config: IConfig = {
             password: process.env.LOCAL_DB_PASSWORD!,
             database: process.env.LOCAL_DB_NAME!
         }
+    },
+    mail: {
+        key: process.env.MAILJET_KEY!,
+        secret: process.env.MAILJET_SECRET!
     }
 }
