@@ -15,6 +15,8 @@ const completeSignup = async (dto: TCompleteSignupDto) => {
     const user = await UserRepo.getByEmail(email);
     if (!user) throw new NotFoundError('User email not found.');
 
+    if (user.otp_status === OTPStatus.ACTIVE) throw new ServiceError('Email otp already verified.')
+
     const validatedOtp = await OTP.validate(otp, user.otp, user.otp_expiration);
 
     if (validatedOtp.expired) {
