@@ -3,6 +3,7 @@ import { UserRepo } from "@/src/database/repositories/user.repo";
 import { InternalServerError, NotFoundError } from "@/src/libs/exceptions";
 import { Mail } from "@/src/libs/mailer";
 import { OTP } from "@/src/utils/otp";
+import SMS from "../../libs/sms/index";
 
 export const requestEmailOtp = async (email: string) => {
   const user = await UserRepo.getByEmail(email);
@@ -43,10 +44,8 @@ export const requestEmailOtp = async (email: string) => {
   };
 };
 
-export const requestPhoneOtp = async (phone: string) => {
-  const user = await UserRepo.getOneByFilter({
-    email: "essienemma300@gmail.com",
-  });
+export const requestPhoneOtp = async (userId: number, phone: string) => {
+  const user = await UserRepo.getById(userId);
   if (!user) throw new NotFoundError("User phone not found");
 
   let phoneOtp;
@@ -61,17 +60,25 @@ export const requestPhoneOtp = async (phone: string) => {
     phoneOtp = generatedOtp;
   }
 
-  user.phone_otp_expiration = await OTP.generateExpiryDate();
-  user.phone_otp_status = OTPStatus.PENDING;
+  const phoneOtpExpDate = await OTP.generateExpiryDate();
 
-  // send phone otp
+  const msg = `Hello, You otp is ${phoneOtp}`;
 
-  // if not successful
+  const smsResonse = await SMS.send({ phone, msg });
+  if (!smsResonse.success)
+    throw new InternalServerError("Unble to send sms otp");
 
-  // if successful update user phone otp fields
+  const updatedUser = await UserRepo.update(userId, {
+    phone,
+    phone_otp: phoneOtp,
+    phone_otp_status: OTPStatus.PENDING,
+    phone_otp_expiration: phoneOtpExpDate,
+  });
+  if (!updatedUser)
+    throw new InternalServerError("Unable to update user phone fields.");
 
   return {
     message: "Phone otp sent successfully",
-    data: { user, phoneOtp },
+    data: { updatedUser },
   };
 };

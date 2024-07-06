@@ -1,6 +1,6 @@
 import twilio from "twilio";
 import { Config } from "@/src/config";
-import { SMSProvider } from ".";
+import { SMSProvider, TSMS } from "./generics/index";
 
 const { accountSid, authToken, phone: twilioPhone } = Config.sms.twilioConfig;
 
@@ -12,13 +12,25 @@ class TwiioSMS implements SMSProvider {
     this.client = twilio(accountSid, authToken);
   }
 
-  async sendOtp(phone: string, otp: string): Promise<any> {
-    const message = await this.client.messages.create({
-      body: `Hello, you otp is ${otp}`,
-      to: phone,
-      from: twilioPhone,
-    });
-    console.log(message.sid);
+  async send(smsDto: TSMS): Promise<any> {
+    const { phone, msg } = smsDto;
+    try {
+      const message = await this.client.messages.create({
+        body: msg,
+        to: phone,
+        from: twilioPhone,
+      });
+      if (message.errorCode)
+        return {
+          success: false,
+          errorMessage: message.errorMessage,
+          status: message.status,
+        };
+      if (message.status === "queued")
+        return { success: true, status: "queued", errorCode: null };
+    } catch (error) {
+      console.log("- Error:: SMS not sent");
+    }
   }
 }
 

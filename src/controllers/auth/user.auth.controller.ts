@@ -49,10 +49,10 @@ export class UserAuthController {
   }
 
   @Validate(UserRequestPhoneOtpSchema)
-  @Post("/request-phone-otp")
+  @Post("/request-phone-otp/:userId")
   requestPhoneOtp(req: ControllerRequest, res: Response, next: NextFunction) {
     return wrapHandler((req: ControllerRequest) => {
-      return requestPhoneOtp(req.body.phone);
+      return requestPhoneOtp(Number(req.params.userId), req.body.phone);
     })(req, res, next);
   }
 
