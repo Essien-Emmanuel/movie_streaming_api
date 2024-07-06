@@ -20,15 +20,19 @@ const completeSignup = async (dto: TCompleteSignupDto) => {
   const user = await UserRepo.getByEmail(email);
   if (!user) throw new NotFoundError("User email not found.");
 
-  if (user.otp_status === OTPStatus.ACTIVE)
+  if (user.email_otp_status === OTPStatus.ACTIVE)
     throw new ServiceError("Email otp already verified.");
 
-  const validatedOtp = await OTP.validate(otp, user.otp, user.otp_expiration);
+  const validatedOtp = await OTP.validate(
+    otp,
+    user.email_otp,
+    user.email_otp_expiration
+  );
 
   if (validatedOtp.expired) {
-    user.otp_status = OTPStatus.EXPIRED;
+    user.email_otp_status = OTPStatus.EXPIRED;
     const updatedUser = await UserRepo.update(user.id, {
-      otp_status: OTPStatus.EXPIRED,
+      email_otp_status: OTPStatus.EXPIRED,
     });
     if (!updatedUser)
       throw new InternalServerError("Unable to update user status");
@@ -38,9 +42,9 @@ const completeSignup = async (dto: TCompleteSignupDto) => {
 
   if (!validatedOtp.isOtp) throw new ValidationError(validatedOtp.msg);
 
-  user.otp_status = OTPStatus.ACTIVE;
+  user.email_otp_status = OTPStatus.ACTIVE;
   const updatedUser = await UserRepo.update(user.id, {
-    otp_status: OTPStatus.ACTIVE,
+    email_otp_status: OTPStatus.ACTIVE,
   });
 
   const token = await generateToken({

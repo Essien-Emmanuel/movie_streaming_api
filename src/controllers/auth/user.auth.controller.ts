@@ -5,6 +5,7 @@ import {
   UserLoginShcema,
   UserPasswordResetSchema,
   UserRequestEmailOtpSchema,
+  UserRequestPhoneOtpSchema,
   UserSignupSchema,
   UserVerifyEmailShcema,
 } from "@/src/validators/schemas/user.schema";
@@ -14,6 +15,7 @@ import {
   completeSignup,
   initiateSignup,
   requestEmailOtp,
+  requestPhoneOtp,
   login,
   resetPassword,
 } from "../../services/auth/index";
@@ -43,6 +45,14 @@ export class UserAuthController {
   requestEmailOtp(req: ControllerRequest, res: Response, next: NextFunction) {
     return wrapHandler((req: ControllerRequest) => {
       return requestEmailOtp(req.body.email);
+    })(req, res, next);
+  }
+
+  @Validate(UserRequestPhoneOtpSchema)
+  @Post("/request-phone-otp")
+  requestPhoneOtp(req: ControllerRequest, res: Response, next: NextFunction) {
+    return wrapHandler((req: ControllerRequest) => {
+      return requestPhoneOtp(req.body.phone);
     })(req, res, next);
   }
 

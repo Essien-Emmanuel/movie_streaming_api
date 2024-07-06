@@ -11,6 +11,9 @@ export class User extends Generic {
   @Column()
   password!: string;
 
+  @Column()
+  phone!: string;
+
   @Column({
     type: "enum",
     enum: Object.values(Role),
@@ -19,17 +22,30 @@ export class User extends Generic {
   role!: string;
 
   @Column()
-  otp!: string;
+  email_otp!: string;
 
   @Column({
     type: "enum",
     enum: Object.values(OTPStatus),
     default: OTPStatus.PENDING,
   })
-  otp_status!: string;
+  email_otp_status!: string;
 
   @Column({ type: "timestamp" })
-  otp_expiration!: Date;
+  email_otp_expiration!: Date;
+
+  @Column()
+  phone_otp!: string;
+
+  @Column({
+    type: "enum",
+    enum: Object.values(OTPStatus),
+    default: OTPStatus.PENDING,
+  })
+  phone_otp_status!: string;
+
+  @Column({ type: "timestamp" })
+  phone_otp_expiration!: Date;
 
   @Column({ default: false })
   is_password_reset!: boolean;

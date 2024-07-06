@@ -63,6 +63,15 @@ export const UserRequestEmailOtpSchema = z.object({
     .email(),
 });
 
+export const UserRequestPhoneOtpSchema = z.object({
+  phone: z
+    .string({
+      required_error: "phone is required",
+      invalid_type_error: "phone must be of type string",
+    })
+    .trim(),
+});
+
 export type TUserRequestEmailOtpSchema = z.infer<
   typeof UserRequestEmailOtpSchema
 >;

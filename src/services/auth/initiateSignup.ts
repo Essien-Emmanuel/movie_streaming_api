@@ -34,9 +34,9 @@ const initiateSignup = async (signupDto: TUserSignupSchema) => {
     email,
     password: hashedPassword,
     role: Role.USER,
-    otp: generatedOtp,
-    otp_status: OTPStatus.PENDING,
-    otp_expiration: otpExpDate,
+    email_otp: generatedOtp,
+    email_otp_status: OTPStatus.PENDING,
+    email_otp_expiration: otpExpDate,
   });
 
   if (!newUser) throw new InternalServerError("Unable to save new user");

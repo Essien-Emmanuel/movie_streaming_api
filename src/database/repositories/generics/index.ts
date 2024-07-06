@@ -1,34 +1,47 @@
-import { DeepPartial, DeleteResult, FindOptionsWhere, ObjectLiteral, Repository,} from 'typeorm';
-import { Generic } from '../../entities/generics';
-import { IRepository } from './types';
+import {
+  DeepPartial,
+  DeleteResult,
+  FindOptionsWhere,
+  ObjectLiteral,
+  Repository,
+} from "typeorm";
+import { Generic } from "../../entities/generics";
+import { IRepository } from "./types";
 
-export abstract class GenericRepo<T extends Generic & ObjectLiteral > implements IRepository<T> {
-    constructor( protected readonly repository: Repository<T>) {}
+export abstract class GenericRepo<T extends Generic & ObjectLiteral>
+  implements IRepository<T>
+{
+  constructor(protected readonly repository: Repository<T>) {}
 
-    getById(id: number): Promise<T | null> {
-        return this.repository.findOneBy({ id } as FindOptionsWhere<T>);
-    }
+  getById(id: number): Promise<T | null> {
+    return this.repository.findOneBy({ id } as FindOptionsWhere<T>);
+  }
 
-    getAll(): Promise<T[]> {
-        return this.repository.find();
-    }
+  getAll(): Promise<T[]> {
+    return this.repository.find();
+  }
 
-    getSomeByFilter(filterQuery: Partial<T>): Promise<T[]> {
-        return this.repository.findBy({ where: filterQuery } as unknown as FindOptionsWhere<T>)
-    }
+  getOneByFilter(filterQuery: Partial<T>): Promise<T | null> {
+    return this.repository.findOneBy(filterQuery);
+  }
 
-    create(data: DeepPartial<T>): Promise<T> {
-        const entity = this.repository.create(data);
-        return this.repository.save(entity);
-    }
+  getSomeByFilter(filterQuery: Partial<T>): Promise<T[]> {
+    return this.repository.findBy({
+      where: filterQuery,
+    } as unknown as FindOptionsWhere<T>);
+  }
 
-    async update(id: number, data: DeepPartial<T>): Promise<T | null> {
-        await this.repository.update(id, data);
-        return this.getById(id)
-       
-    }
+  create(data: DeepPartial<T>): Promise<T> {
+    const entity = this.repository.create(data);
+    return this.repository.save(entity);
+  }
 
-    delete(id: number): Promise<DeleteResult> {
-        return this.repository.delete(id)
-    }
+  async update(id: number, data: DeepPartial<T>): Promise<T | null> {
+    await this.repository.update(id, data);
+    return this.getById(id);
+  }
+
+  delete(id: number): Promise<DeleteResult> {
+    return this.repository.delete(id);
+  }
 }
