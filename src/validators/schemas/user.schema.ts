@@ -63,6 +63,15 @@ export const UserRequestEmailOtpSchema = z.object({
     .email(),
 });
 
+export const UserRequestPhoneOtpSchema = z.object({
+  phone: z
+    .string({
+      required_error: "phone is required",
+      invalid_type_error: "phone must be of type string",
+    })
+    .trim(),
+});
+
 export type TUserRequestEmailOtpSchema = z.infer<
   typeof UserRequestEmailOtpSchema
 >;
@@ -90,12 +99,10 @@ export const UserLoginShcema = z.object({
     .trim()
     .email(),
 
-  password: z
-    .string({
-      required_error: "password is required",
-      invalid_type_error: "password must be of type string",
-    })
-    .min(6, { message: "password must be of minimum length of 6" }),
+  password: z.string({
+    required_error: "password is required",
+    invalid_type_error: "password must be of type string",
+  }),
 });
 
 export type TUserLoginSchema = z.infer<typeof UserLoginShcema>;
